@@ -1,0 +1,25 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DEFAULT_CLIENT_ID: $SECRET_NAME:DEFAULT_CLIENT_ID
+    HOST: $SECRET_NAME:HOST
+    CUSTOM_CERTS: $SECRET_NAME:CUSTOM_CERTS
+phases:
+  install:
+    commands:
+      - npm install -g aws-cdk
+      - npm install 
+  pre_build:
+    commands:
+      - export DEFAULT_CLIENT_ID=$DEFAULT_CLIENT_ID
+      - export HOST=$HOST
+      - export CUSTOM_CERTS="$CUSTOM_CERTS"
+  build:
+    commands:
+      - echo build started on `date`
+      - cdk bootstrap --public-access-block-configuration=false
+  post_build:
+    commands:
+      - ./prepare-build.sh
+      - cdk deploy --require-approval never

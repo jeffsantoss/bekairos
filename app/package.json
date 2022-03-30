@@ -1,0 +1,43 @@
+{
+  "name": "iam",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint:fix": "eslint . --ext .ts --fix",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s . -o ./dist",
+    "test": "jest --runInBand",
+    "test:silent": "jest --runInBand --silent --coverage=false"
+  },
+  "author": "BeKairos",
+  "license": "ISC",
+  "devDependencies": {
+    "@shelf/jest-dynamodb": "^2.2.3",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.12",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
+    "aws-sdk": "^2.1071.0",
+    "eslint": "^8.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-no-loops": "^0.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.4.4",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "ts-jest": "^27.1.1",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.12.0",
+    "tscpaths": "^0.0.9",
+    "typescript": "^4.5.3"
+  },
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.82",
+    "@types/uuid": "^8.3.3",
+    "crypto": "^1.0.1",    
+    "dynamodb-onetable": "^2.2.0",    
+    "module-alias": "^2.2.2",
+    "uuid": "^8.3.2"
+  }
+}

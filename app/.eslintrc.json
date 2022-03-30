@@ -1,0 +1,31 @@
+{
+    "env": {
+        "es2020": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "prettier",
+        "@typescript-eslint",
+        "no-loops"
+    ],
+    "ignorePatterns": [
+        "build",
+        "dist"
+    ],
+    "rules": {
+        "prettier/prettier": "error",
+        "no-loops/no-loops": "error",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-explicit-any": "off"
+    }
+}
