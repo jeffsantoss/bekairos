@@ -59,7 +59,8 @@ export const beKairosSchema = {
     Schedule: {
       pk: { type: String, value: 'schedule:${id}' },
       sk: { type: String, value: 'schedule:' },
-      affilateServiceId: { type: String, required: true }
+      affilateServiceId: { type: String, required: true },
+      dateTime: { type: Number, required: true }
     },
     UserDetails: {
       pk: { type: String, value: 'user-details:${id}' },
