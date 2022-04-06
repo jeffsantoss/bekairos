@@ -59,6 +59,7 @@ export const beKairosSchema = {
     Schedule: {
       pk: { type: String, value: 'schedule:${id}' },
       sk: { type: String, value: 'schedule:' },
+      id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       partnerServiceId: { type: String, required: true },
       start: { type: Number, required: true },
       end: { type: Number, required: true }

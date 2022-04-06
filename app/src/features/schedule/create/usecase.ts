@@ -7,8 +7,10 @@ import { CreateScheduleRequest } from '../request-models'
 import moment from 'moment'
 import { DATE_TIME_FORMAT } from '@common/constants'
 import { dateTimeToString } from '@common/utils/datetime'
+import { ScheduleResponse } from '../response-models'
+import { v4 } from 'uuid'
 
-export const createSchedule = async (request: CreateScheduleRequest): Promise<void> => {
+export const createSchedule = async (request: CreateScheduleRequest): Promise<ScheduleResponse> => {
   const dbConnection = await getBeKairosDBConnection()
 
   console.log(`Searching service if exists`)
@@ -19,40 +21,51 @@ export const createSchedule = async (request: CreateScheduleRequest): Promise<vo
 
   if (!service) throw new NotFoundError(request.serviceId)
 
-  const currentDate = request.startJourney
+  let currentDate = request.startJourney
 
   console.log(`Horário de inicio da jornada: ${moment(currentDate).format(DATE_TIME_FORMAT)}`)
 
-  while (currentDate <= request.endJourney) {
-    // if(currentDate >= )
-    const end = moment(currentDate).add(request.serviceDurationInMinutes, 'minutes')
+  const response: ScheduleResponse = {
+    service: {
+      id: service.id,
+      name: service.name
+    },
+    schedules: []
+  }
+
+  while (currentDate < request.endJourney) {
+    request.intervals?.forEach((i) => {
+      if (currentDate >= i?.start && currentDate <= i?.end) {
+        currentDate = i.end
+        return
+      }
+    })
+
+    const end = moment(currentDate).add(request.serviceDurationInMinutes, 'minutes').valueOf()
 
     console.log(
       `Criando agenda para o parceiro ${service.partnerId} com horário ${dateTimeToString(
         currentDate
-      )} até ${dateTimeToString(end.valueOf())}`
+      )} até ${dateTimeToString(end)}`
     )
 
-    await create(currentDate, end.unix(), request.serviceId)
+    await create(currentDate, end, request.serviceId)
+
+    currentDate = end.valueOf()
+
+    response.schedules.push({ start: currentDate, end: end })
   }
+
+  return response
 }
 
 const create = async (start: number, end: number, partnerServiceId: string) => {
   const dbConnection = await getBeKairosDBConnection()
 
   await dbConnection.getModelFor<ScheduleEntity>(BeKairosModels.Schedule).create({
+    id: v4(),
     start,
     end,
     partnerServiceId
   })
 }
-
-/*
-
-Inicio - 07:00
-Fim - 17:00
-Intervalo - 
-
-Enquanto vai do inicio até o intervalo 
-
- */

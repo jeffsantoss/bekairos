@@ -52,7 +52,7 @@ export const REVIEWS_FIXTURE: ReviewEntity[] = [
     id: v4(),
     description: 'vc eh pica',
     score: 5,
-    affiliateId: PARTNER_FIXTURE.id,
+    partnerId: PARTNER_FIXTURE.id,
     specialtyId: specialtyFixture[0].id,
     userId: USER_FIXTURE.id
   },
@@ -60,7 +60,7 @@ export const REVIEWS_FIXTURE: ReviewEntity[] = [
     id: v4(),
     description: 'vc eh ruim',
     score: 1,
-    affiliateId: PARTNER_FIXTURE.id,
+    partnerId: PARTNER_FIXTURE.id,
     specialtyId: specialtyFixture[0].id,
     userId: USER_FIXTURE.id
   }

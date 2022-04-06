@@ -8,10 +8,13 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   try {
     const body = JSON.parse(event.body)
 
-    const intervals: IntervalRequest[] = body.intervals.map((i) => {
-      i.start
-      i.end
-    })
+    const intervals = body.intervals.map(
+      (i) =>
+        <IntervalRequest>{
+          start: i.start,
+          end: i.end
+        }
+    )
 
     return ok(
       await createSchedule({
