@@ -49,7 +49,7 @@ export const beKairosSchema = {
       description: { type: String, required: false }
     },
     PartnerMember: {
-      pk: { type: String, value: 'partner-member:${affiliateId}}' },
+      pk: { type: String, value: 'partner-member:${partnerId}}' },
       sk: { type: String, value: 'partner-member:' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       userId: { type: String, required: true },
@@ -80,14 +80,14 @@ export const beKairosSchema = {
       pk: { type: String, value: 'user-favorite-partner:${userId}:${scheduleId}' },
       sk: { type: String, value: 'user-favorite-partner:' },
       userId: { type: String, required: true },
-      affiliateId: { type: String, required: true }
+      partnerId: { type: String, required: true }
     },
     Review: {
       pk: { type: String, value: 'review:${id}' },
       sk: { type: String, value: 'review:$' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       description: { type: String, required: true },
-      affiliateId: { type: String, required: true },
+      partnerId: { type: String, required: true },
       specialtyId: { type: String, required: true },
       userId: { type: String, required: true },
       score: { type: Number, required: true },
@@ -111,7 +111,7 @@ export const BeKairosModels = {
   ScheduleUser: 'ScheduleUser',
   UserDetails: 'UserDetails',
   UserSchedule: 'UserSchedule',
-  UserFavoritePatner: 'UserFavoritePatner',
+  UserFavoritePartner: 'UserFavoritePartner',
   Specialty: 'Specialty',
   Review: 'Review'
 }
