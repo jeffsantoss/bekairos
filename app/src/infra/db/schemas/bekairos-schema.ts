@@ -11,9 +11,9 @@ export const beKairosSchema = {
     gs5: { hash: 'gs5pk', sort: 'gs5sk', project: 'keys', follow: false }
   },
   models: {
-    Affiliate: {
-      pk: { type: String, value: 'affiliate:${id}' },
-      sk: { type: String, value: 'affiliate:' },
+    Partner: {
+      pk: { type: String, value: 'partner:${id}' },
+      sk: { type: String, value: 'partner:' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       name: { type: String, required: true },
       ownerId: { type: String, required: true },
@@ -36,31 +36,32 @@ export const beKairosSchema = {
       },
       photo: { type: String, required: true },
 
-      gs1pk: { type: String, value: 'affiliate:category:${specialtyId}' },
-      gs1sk: { type: String, value: 'affiliate:category:' }
+      gs1pk: { type: String, value: 'partner:specialty:${specialtyId}' },
+      gs1sk: { type: String, value: 'partner:specialty:' }
     },
-    AffiliateService: {
-      pk: { type: String, value: 'affiliate-service:${id}' },
-      sk: { type: String, value: 'affiliate-service:' },
+    PartnerService: {
+      pk: { type: String, value: 'partner-service:${id}' },
+      sk: { type: String, value: 'partner-service:' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       name: { type: String, required: true },
-      affiliateId: { type: String, required: true },
+      partnerId: { type: String, required: true },
       price: { type: Number, required: false },
       description: { type: String, required: false }
     },
-    AffiliateMember: {
-      pk: { type: String, value: 'affiliate-member:${affiliateId}}' },
-      sk: { type: String, value: 'affiliate-member:' },
+    PartnerMember: {
+      pk: { type: String, value: 'partner-member:${affiliateId}}' },
+      sk: { type: String, value: 'partner-member:' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       userId: { type: String, required: true },
-      affiliateServiceId: { type: String, required: true },
-      affiliateId: { type: String, required: true }
+      partnerServiceId: { type: String, required: true },
+      partnerId: { type: String, required: true }
     },
     Schedule: {
       pk: { type: String, value: 'schedule:${id}' },
       sk: { type: String, value: 'schedule:' },
-      affilateServiceId: { type: String, required: true },
-      dateTime: { type: Number, required: true }
+      partnerServiceId: { type: String, required: true },
+      start: { type: Number, required: true },
+      end: { type: Number, required: true }
     },
     UserDetails: {
       pk: { type: String, value: 'user-details:${id}' },
@@ -104,8 +105,8 @@ export const beKairosSchema = {
 }
 
 export const BeKairosModels = {
-  Affiliate: 'Affiliate',
-  AffiliateService: 'AffiliateService',
+  Partner: 'Partner',
+  PartnerService: 'PatnerService',
   Schedule: 'Schedule',
   ScheduleUser: 'ScheduleUser',
   UserDetails: 'UserDetails',

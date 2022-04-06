@@ -35,9 +35,10 @@
   "dependencies": {
     "@types/aws-lambda": "^8.10.82",
     "@types/uuid": "^8.3.3",
-    "crypto": "^1.0.1",    
-    "dynamodb-onetable": "^2.2.0",    
+    "crypto": "^1.0.1",
+    "dynamodb-onetable": "^2.2.0",
     "module-alias": "^2.2.2",
+    "moment": "^2.29.2",
     "uuid": "^8.3.2"
   }
 }

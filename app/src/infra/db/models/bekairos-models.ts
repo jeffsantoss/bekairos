@@ -1,8 +1,8 @@
 import { Entity } from 'dynamodb-onetable'
 import { beKairosSchema } from '../schemas/bekairos-schema'
 
-export type AffiliateEntity = Entity<typeof beKairosSchema.models.Affiliate>
-export type AffiliateServiceEntity = Entity<typeof beKairosSchema.models.AffiliateService>
+export type PartnerEntity = Entity<typeof beKairosSchema.models.Partner>
+export type PartnerServiceEntity = Entity<typeof beKairosSchema.models.PartnerService>
 export type ScheduleEntity = Entity<typeof beKairosSchema.models.Schedule>
 export type UserDetailsEntity = Entity<typeof beKairosSchema.models.UserDetails>
 export type UserScheduleEntity = Entity<typeof beKairosSchema.models.UserSchedule>

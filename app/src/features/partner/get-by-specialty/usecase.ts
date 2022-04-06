@@ -2,7 +2,7 @@ import { BadArgumentError } from '@common/errors/api-errors'
 import { calculateDistanceBetweenCoordinates } from '@common/utils/geodist'
 import { average } from '@common/utils/math'
 import { getBeKairosDBConnection } from '@infra/db/db'
-import { AffiliateEntity, SpecialtyEntity, ReviewEntity } from '@infra/db/models/bekairos-models'
+import { PartnerEntity, SpecialtyEntity, ReviewEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { GetAffiliatesBySpecialty } from '../request-models'
 import { AffiliateResponse } from '../response-models'
@@ -20,7 +20,7 @@ export const getBySpecialty = async (
   const category = await dbConnection.getModelFor<SpecialtyEntity>(BeKairosModels.Specialty).get({ id: specialtyId })
 
   const affiliates = await dbConnection
-    .getModelFor<AffiliateEntity>(BeKairosModels.Affiliate)
+    .getModelFor<PartnerEntity>(BeKairosModels.Partner)
     .find({ specialtyId }, { index: 'gs1', follow: true })
 
   const reviews = await dbConnection

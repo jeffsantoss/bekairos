@@ -1,5 +1,5 @@
 import { getBeKairosDBConnection } from '@infra/db/db'
-import { AffiliateEntity, SpecialtyEntity, ReviewEntity, UserDetailsEntity } from '@infra/db/models/bekairos-models'
+import { PartnerEntity, SpecialtyEntity, ReviewEntity, UserDetailsEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { v4 } from 'uuid'
 
@@ -15,7 +15,7 @@ export const specialtyFixture: SpecialtyEntity[] = [
   { id: v4(), name: 'Dentista' }
 ]
 
-export const affiliateFixture: AffiliateEntity = {
+export const partnerFixture: PartnerEntity = {
   id: v4(),
   coordinates: {
     latitude: '-27.4398163',
@@ -39,7 +39,7 @@ export const reviewsFixture: ReviewEntity[] = [
     id: v4(),
     description: 'vc eh pica',
     score: 5,
-    affiliateId: affiliateFixture.id,
+    affiliateId: partnerFixture.id,
     specialtyId: specialtyFixture[0].id,
     userId: userFixture.id
   },
@@ -47,7 +47,7 @@ export const reviewsFixture: ReviewEntity[] = [
     id: v4(),
     description: 'vc eh um bosta',
     score: 1,
-    affiliateId: affiliateFixture.id,
+    affiliateId: partnerFixture.id,
     specialtyId: specialtyFixture[0].id,
     userId: userFixture.id
   }
@@ -60,7 +60,7 @@ export const fixture = async () => {
     specialtyFixture.map((specialty) => connec.getModelFor<SpecialtyEntity>(BeKairosModels.Specialty).create(specialty))
   )
   await connec.getModelFor<UserDetailsEntity>(BeKairosModels.UserDetails).create(userFixture)
-  await connec.getModelFor<AffiliateEntity>(BeKairosModels.Affiliate).create(affiliateFixture)
+  await connec.getModelFor<PartnerEntity>(BeKairosModels.Partner).create(partnerFixture)
   await Promise.all(
     reviewsFixture.map((review) => connec.getModelFor<ReviewEntity>(BeKairosModels.Review).create(review))
   )
