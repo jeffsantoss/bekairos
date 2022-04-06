@@ -15,11 +15,11 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
     return ok(
       await createSchedule({
-        startJourney: body.start_journey,
-        endJourney: body.end_journey,
+        startJourney: body.startJourney,
+        endJourney: body.endJourney,
         intervals,
-        serviceDurationInMinutes: body.service_duration,
-        serviceId: body.service_id
+        serviceDurationInMinutes: body.serviceDurationInMinutes,
+        serviceId: body.serviceId
       })
     )
   } catch (e) {

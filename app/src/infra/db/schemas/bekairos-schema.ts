@@ -106,7 +106,7 @@ export const beKairosSchema = {
 
 export const BeKairosModels = {
   Partner: 'Partner',
-  PartnerService: 'PatnerService',
+  PartnerService: 'PartnerService',
   Schedule: 'Schedule',
   ScheduleUser: 'ScheduleUser',
   UserDetails: 'UserDetails',

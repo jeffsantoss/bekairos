@@ -1,9 +1,15 @@
 import { getBeKairosDBConnection } from '@infra/db/db'
-import { PartnerEntity, SpecialtyEntity, ReviewEntity, UserDetailsEntity } from '@infra/db/models/bekairos-models'
+import {
+  PartnerEntity,
+  SpecialtyEntity,
+  ReviewEntity,
+  UserDetailsEntity,
+  PartnerServiceEntity
+} from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { v4 } from 'uuid'
 
-export const userFixture: UserDetailsEntity = {
+export const USER_FIXTURE: UserDetailsEntity = {
   id: v4(),
   name: 'Jefferson Santos de Souza',
   phone: '85986821854'
@@ -15,7 +21,7 @@ export const specialtyFixture: SpecialtyEntity[] = [
   { id: v4(), name: 'Dentista' }
 ]
 
-export const partnerFixture: PartnerEntity = {
+export const PARTNER_FIXTURE: PartnerEntity = {
   id: v4(),
   coordinates: {
     latitude: '-27.4398163',
@@ -23,7 +29,7 @@ export const partnerFixture: PartnerEntity = {
   },
   name: 'Barbearia VIP',
   specialtyId: specialtyFixture[0].id,
-  ownerId: userFixture.id,
+  ownerId: USER_FIXTURE.id,
   address: {
     uf: 'SC',
     city: 'Florianópolis',
@@ -34,22 +40,29 @@ export const partnerFixture: PartnerEntity = {
   photo: 'photo.png'
 }
 
-export const reviewsFixture: ReviewEntity[] = [
+export const PARTNER_SERVICE_FIXTURE: PartnerServiceEntity = {
+  description: 'Corte de Cabelo com diversas opções para melhor atender',
+  name: 'Corte de Cabelo',
+  partnerId: PARTNER_FIXTURE.id,
+  price: 25,
+  id: v4()
+}
+export const REVIEWS_FIXTURE: ReviewEntity[] = [
   {
     id: v4(),
     description: 'vc eh pica',
     score: 5,
-    affiliateId: partnerFixture.id,
+    affiliateId: PARTNER_FIXTURE.id,
     specialtyId: specialtyFixture[0].id,
-    userId: userFixture.id
+    userId: USER_FIXTURE.id
   },
   {
     id: v4(),
-    description: 'vc eh um bosta',
+    description: 'vc eh ruim',
     score: 1,
-    affiliateId: partnerFixture.id,
+    affiliateId: PARTNER_FIXTURE.id,
     specialtyId: specialtyFixture[0].id,
-    userId: userFixture.id
+    userId: USER_FIXTURE.id
   }
 ]
 
@@ -59,9 +72,10 @@ export const fixture = async () => {
   await Promise.all(
     specialtyFixture.map((specialty) => connec.getModelFor<SpecialtyEntity>(BeKairosModels.Specialty).create(specialty))
   )
-  await connec.getModelFor<UserDetailsEntity>(BeKairosModels.UserDetails).create(userFixture)
-  await connec.getModelFor<PartnerEntity>(BeKairosModels.Partner).create(partnerFixture)
+  await connec.getModelFor<UserDetailsEntity>(BeKairosModels.UserDetails).create(USER_FIXTURE)
+  await connec.getModelFor<PartnerEntity>(BeKairosModels.Partner).create(PARTNER_FIXTURE)
+  await connec.getModelFor<PartnerServiceEntity>(BeKairosModels.PartnerService).create(PARTNER_SERVICE_FIXTURE)
   await Promise.all(
-    reviewsFixture.map((review) => connec.getModelFor<ReviewEntity>(BeKairosModels.Review).create(review))
+    REVIEWS_FIXTURE.map((review) => connec.getModelFor<ReviewEntity>(BeKairosModels.Review).create(review))
   )
 }

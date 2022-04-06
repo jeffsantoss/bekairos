@@ -6,6 +6,6 @@ export type PartnerServiceEntity = Entity<typeof beKairosSchema.models.PartnerSe
 export type ScheduleEntity = Entity<typeof beKairosSchema.models.Schedule>
 export type UserDetailsEntity = Entity<typeof beKairosSchema.models.UserDetails>
 export type UserScheduleEntity = Entity<typeof beKairosSchema.models.UserSchedule>
-export type UserFavoriteAffiliateEntity = Entity<typeof beKairosSchema.models.UserFavoriteAffiliate>
+export type UserFavoriteAffiliateEntity = Entity<typeof beKairosSchema.models.UserFavoritePartner>
 export type ReviewEntity = Entity<typeof beKairosSchema.models.Review>
 export type SpecialtyEntity = Entity<typeof beKairosSchema.models.Specialty>

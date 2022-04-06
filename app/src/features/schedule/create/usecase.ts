@@ -5,6 +5,8 @@ import { PartnerServiceEntity, ScheduleEntity } from '@infra/db/models/bekairos-
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { CreateScheduleRequest } from '../request-models'
 import moment from 'moment'
+import { DATE_TIME_FORMAT } from '@common/constants'
+import { dateTimeToString } from '@common/utils/datetime'
 
 export const createSchedule = async (request: CreateScheduleRequest): Promise<void> => {
   const dbConnection = await getBeKairosDBConnection()
@@ -19,14 +21,16 @@ export const createSchedule = async (request: CreateScheduleRequest): Promise<vo
 
   const currentDate = request.startJourney
 
+  console.log(`Horário de inicio da jornada: ${moment(currentDate).format(DATE_TIME_FORMAT)}`)
+
   while (currentDate <= request.endJourney) {
     // if(currentDate >= )
     const end = moment(currentDate).add(request.serviceDurationInMinutes, 'minutes')
 
     console.log(
-      `Criando agenda para o parceiro ${service.partnerId} com horário ${currentDate.toLocaleString()} até ${end
-        .unix()
-        .toLocaleString()}`
+      `Criando agenda para o parceiro ${service.partnerId} com horário ${dateTimeToString(
+        currentDate
+      )} até ${dateTimeToString(end.valueOf())}`
     )
 
     await create(currentDate, end.unix(), request.serviceId)
