@@ -76,9 +76,9 @@ export const beKairosSchema = {
       userId: { type: String, required: true },
       scheduleId: { type: String, required: true }
     },
-    UserFavoriteAffiliate: {
-      pk: { type: String, value: 'user-favorite-affiliate:${userId}:${scheduleId}' },
-      sk: { type: String, value: 'user-favorite-affiliate:' },
+    UserFavoritePartner: {
+      pk: { type: String, value: 'user-favorite-partner:${userId}:${scheduleId}' },
+      sk: { type: String, value: 'user-favorite-partner:' },
       userId: { type: String, required: true },
       affiliateId: { type: String, required: true }
     },
@@ -111,7 +111,7 @@ export const BeKairosModels = {
   ScheduleUser: 'ScheduleUser',
   UserDetails: 'UserDetails',
   UserSchedule: 'UserSchedule',
-  UserFavoriteAffiliate: 'UserFavoriteAffiliate',
+  UserFavoritePatner: 'UserFavoritePatner',
   Specialty: 'Specialty',
   Review: 'Review'
 }
