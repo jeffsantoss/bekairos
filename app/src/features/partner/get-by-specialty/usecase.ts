@@ -47,7 +47,7 @@ export const getBySpecialty = async (
         id: category.id,
         name: category.name
       },
-      reviewAvg: average(reviews.filter((r) => r.affiliateId == aff.id).map((s) => s.score))
+      reviewAvg: average(reviews.filter((r) => r.partnerId == aff.id).map((s) => s.score))
     }
   })
 }
