@@ -5,6 +5,8 @@ import { getBySpecialty } from './usecase'
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
+    // await authorizeResourceAccess(event)
+
     const specialtyId = event.pathParameters.specialtyId
     const body = JSON.parse(event.body)
 

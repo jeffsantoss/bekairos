@@ -50,7 +50,7 @@ export const PARTNER_SERVICE_FIXTURE: PartnerServiceEntity = {
 export const REVIEWS_FIXTURE: ReviewEntity[] = [
   {
     id: v4(),
-    description: 'vc eh pica',
+    description: 'que serviço pica',
     score: 5,
     partnerId: PARTNER_FIXTURE.id,
     specialtyId: specialtyFixture[0].id,
@@ -58,7 +58,7 @@ export const REVIEWS_FIXTURE: ReviewEntity[] = [
   },
   {
     id: v4(),
-    description: 'vc eh ruim',
+    description: 'que serviço bosta',
     score: 1,
     partnerId: PARTNER_FIXTURE.id,
     specialtyId: specialtyFixture[0].id,
