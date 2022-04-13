@@ -3,7 +3,6 @@ import * as path from 'path'
 import * as cdk from '@aws-cdk/core'
 import { LambdaProps } from './models'
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs'
-import { vpcProps } from '../ec2/vpc'
 import { ATTACH_VPC, ENVIRONMENT, SECURITY_GROUP_ID, SUBNET_IDS, VPC_ID } from '../environment'
 
 export class Lambda extends cdk.Construct {
@@ -24,8 +23,7 @@ export class Lambda extends cdk.Construct {
       bundling: {
         minify: false
       },
-      tracing: lambda.Tracing.ACTIVE,
-      ...(ATTACH_VPC && vpcProps(this, props.functionName!, VPC_ID, SUBNET_IDS, SECURITY_GROUP_ID))
+      tracing: lambda.Tracing.ACTIVE,      
     })
 
     if (props.env) Object.keys(props.env).map((key: string) => func.addEnvironment(key, props.env![key]))

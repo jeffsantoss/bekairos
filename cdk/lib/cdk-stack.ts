@@ -3,6 +3,7 @@ import * as iam from '@aws-cdk/aws-iam'
 
 
 const SRC_FEATURES = '../app/src/features'
+
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
@@ -12,5 +13,10 @@ export class CdkStack extends cdk.Stack {
       actions: ['dynamodb:*'],
       resources: ['*']
     })
+
+    // lambdas
+
+
+    // api gtw
   }
 }
