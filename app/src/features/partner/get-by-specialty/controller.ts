@@ -8,9 +8,13 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     // await authorizeResourceAccess(event)
 
     const specialtyId = event.pathParameters.specialtyId
-    const body = JSON.parse(event.body)
 
-    return ok(await getBySpecialty(specialtyId, { lat: body.coordinates.lat, long: body.coordinates.long }))
+    return ok(
+      await getBySpecialty(specialtyId, {
+        lat: event.queryStringParameters?.latitude,
+        long: event.queryStringParameters?.longitude
+      })
+    )
   } catch (e) {
     return handleError(e)
   }

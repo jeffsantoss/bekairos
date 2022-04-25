@@ -11,36 +11,11 @@ export class ApiGatewayRestApi extends cdk.Construct {
   }
 
   createRestApi = (props: ApiGatewayRestApiProps): apigw.RestApi => {
-    const allowListedIps = ['127.0.0.1', '127.0.0.1']
-
-    const apiResourcePolicy = new iam.PolicyDocument({
-      statements: [
-        new iam.PolicyStatement({
-          actions: ['execute-api:Invoke'],
-          principals: [new iam.AnyPrincipal()],
-          resources: ['execute-api:/*/*/*']
-        }),
-        new iam.PolicyStatement({
-          effect: iam.Effect.DENY,
-          principals: [new iam.AnyPrincipal()],
-          actions: ['execute-api:Invoke'],
-          resources: ['execute-api:/*/*/*'],
-          conditions: {
-            NotIpAddress: {
-              'aws:SourceIp': allowListedIps
-            }
-          }
-        })
-      ]
-    })
-
     const api = new apigw.RestApi(this, props.name, {
       deploy: false,
       endpointConfiguration: {
-        types: [apigw.EndpointType.PRIVATE]
-      },
-      //@ts-ignore
-      policy: apiResourcePolicy
+        types: [apigw.EndpointType.REGIONAL]
+      }
     })
     props.resources
       ?.filter((resource) => resource.lambdaIntegration)
@@ -67,6 +42,7 @@ export class ApiGatewayRestApi extends cdk.Construct {
       deployment: deployment,
       stageName: props.stage
     })
+
     return api
   }
 }

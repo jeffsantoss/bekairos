@@ -28,21 +28,25 @@ export const getBySpecialty = async (
     .find({ specialtyId }, { index: 'gs1', follow: true })
 
   return affiliates.map((aff) => {
-    const distance = calculateDistanceBetweenCoordinates(
-      {
-        latitude: aff.coordinates['latitude'] as number,
-        longitude: aff.coordinates['longitude'] as number
-      },
-      {
-        latitude: Number.parseFloat(request.lat),
-        longitude: Number.parseFloat(request.long)
-      }
-    )
+    let distance
+
+    if (request.lat && request.long) {
+      distance = calculateDistanceBetweenCoordinates(
+        {
+          latitude: aff.coordinates['latitude'] as number,
+          longitude: aff.coordinates['longitude'] as number
+        },
+        {
+          latitude: Number.parseFloat(request.lat),
+          longitude: Number.parseFloat(request.long)
+        }
+      )
+    }
 
     return <AffiliateResponse>{
       name: aff?.name,
       address: aff.address,
-      distance: distance.m.toFixed(0),
+      distance: distance?.m?.toFixed(0),
       category: {
         id: category.id,
         name: category.name
