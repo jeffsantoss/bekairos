@@ -6,7 +6,7 @@ import { createScheduling } from './usecase'
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    await authorizeResourceAccess(event)
+    //await authorizeResourceAccess(event)
 
     const scheduleId = event.pathParameters.scheduleId
 

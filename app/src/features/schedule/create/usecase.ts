@@ -3,13 +3,38 @@ import { NotFoundError } from '@common/errors/api-errors'
 import { getBeKairosDBConnection } from '@infra/db/db'
 import { PartnerServiceEntity, ScheduleEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
-import { CreateScheduleRequest } from '../request-models'
 import moment from 'moment'
 import { DATE_TIME_FORMAT } from '@common/constants'
 import { dateTimeToString } from '@common/utils/datetime'
-import { ScheduleResponse } from '../response-models'
 import { v4 } from 'uuid'
 
+export interface ScheduleResponse {
+  service: PartnerServiceResponse
+  schedules: AttendanceResponse[]
+}
+
+interface AttendanceResponse {
+  start: number
+  end: number
+}
+
+interface PartnerServiceResponse {
+  id: string
+  name: string
+}
+
+export interface CreateScheduleRequest {
+  serviceId: string
+  startJourney: number
+  endJourney: number
+  intervals: IntervalRequest[]
+  serviceDurationInMinutes: number
+}
+
+export interface IntervalRequest {
+  start: number
+  end: number
+}
 export const createSchedule = async (request: CreateScheduleRequest): Promise<ScheduleResponse> => {
   const dbConnection = await getBeKairosDBConnection()
 

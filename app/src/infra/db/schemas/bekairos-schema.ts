@@ -32,9 +32,9 @@ export const beKairosSchema = {
           street: { type: String, required: true },
           streetNumber: { type: String, required: true }
         },
-        required: true
+        required: false
       },
-      photo: { type: String, required: true },
+      photo: { type: String, required: false },
 
       gs1pk: { type: String, value: 'partner:specialty:${specialtyId}' },
       gs1sk: { type: String, value: 'partner:specialty:' }
@@ -46,7 +46,10 @@ export const beKairosSchema = {
       name: { type: String, required: true },
       partnerId: { type: String, required: true },
       price: { type: Number, required: false },
-      description: { type: String, required: false }
+      description: { type: String, required: false },
+
+      gs1pk: { type: String, value: 'partner-service:${partnerId}' },
+      gs1sk: { type: String, value: 'partner-service:' }
     },
     PartnerMember: {
       pk: { type: String, value: 'partner-member:${partnerId}}' },
@@ -101,7 +104,8 @@ export const beKairosSchema = {
       pk: { type: String, value: 'specialty:${id}' },
       sk: { type: String, value: 'specialty:' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
-      name: { type: String, required: true, unique: true }
+      name: { type: String, required: true, unique: true },
+      description: { type: String, required: false }
     }
   }
 }

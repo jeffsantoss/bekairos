@@ -4,22 +4,39 @@ import { average } from '@common/utils/math'
 import { getBeKairosDBConnection } from '@infra/db/db'
 import { PartnerEntity, SpecialtyEntity, ReviewEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
-import { GetAffiliatesBySpecialty } from '../request-models'
-import { AffiliateResponse } from '../response-models'
+
+interface GetAffiliatesBySpecialty {
+  lat: string
+  long: string
+}
+
+export interface PartnerResponse {
+  id: string
+  name: string
+  address?: any
+  reviewAvg?: number
+  distance?: string
+  specialty: SpecialtyResponse
+}
+
+export interface SpecialtyResponse {
+  id: string
+  name: string
+}
 
 export const getBySpecialty = async (
   specialtyId: string,
   request: GetAffiliatesBySpecialty
-): Promise<AffiliateResponse[]> => {
+): Promise<PartnerResponse[]> => {
   const dbConnection = await getBeKairosDBConnection()
 
   if (!specialtyId) throw new BadArgumentError('specialtyId')
 
   console.log(`Searching affiliates from category ${specialtyId}`)
 
-  const category = await dbConnection.getModelFor<SpecialtyEntity>(BeKairosModels.Specialty).get({ id: specialtyId })
+  const specialty = await dbConnection.getModelFor<SpecialtyEntity>(BeKairosModels.Specialty).get({ id: specialtyId })
 
-  const affiliates = await dbConnection
+  const partners = await dbConnection
     .getModelFor<PartnerEntity>(BeKairosModels.Partner)
     .find({ specialtyId }, { index: 'gs1', follow: true })
 
@@ -27,14 +44,14 @@ export const getBySpecialty = async (
     .getModelFor<ReviewEntity>(BeKairosModels.Review)
     .find({ specialtyId }, { index: 'gs1', follow: true })
 
-  return affiliates.map((aff) => {
+  return partners.map((partner) => {
     let distance
 
     if (request.lat && request.long) {
       distance = calculateDistanceBetweenCoordinates(
         {
-          latitude: aff.coordinates['latitude'] as number,
-          longitude: aff.coordinates['longitude'] as number
+          latitude: partner.coordinates['latitude'] as number,
+          longitude: partner.coordinates['longitude'] as number
         },
         {
           latitude: Number.parseFloat(request.lat),
@@ -43,15 +60,16 @@ export const getBySpecialty = async (
       )
     }
 
-    return <AffiliateResponse>{
-      name: aff?.name,
-      address: aff.address,
+    return <PartnerResponse>{
+      id: partner?.id,
+      name: partner?.name,
+      address: partner.address,
       distance: distance?.m?.toFixed(0),
-      category: {
-        id: category.id,
-        name: category.name
+      specialty: {
+        id: specialty.id,
+        name: specialty.name
       },
-      reviewAvg: average(reviews.filter((r) => r.partnerId == aff.id).map((s) => s.score))
+      reviewAvg: average(reviews?.filter((r) => r.partnerId == partner.id)?.map((s) => s.score))
     }
   })
 }

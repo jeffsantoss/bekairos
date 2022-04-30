@@ -8,7 +8,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   try {
     const body = JSON.parse(event.body)
 
-    const intervals = body.intervals.map(
+    const intervals = body?.intervals?.map(
       (i) =>
         <IntervalRequest>{
           start: i.start,

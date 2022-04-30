@@ -19,6 +19,18 @@ export class CdkStack extends cdk.Stack {
     })
 
     // lambdas
+    const lambdaPartnerCreate = new Lambda(this, {
+      functionName: 'partner-create',
+      handlerPath: `${SRC_FEATURES}/partner/create/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
+    const lambdaSpecialtyCreate = new Lambda(this, {
+      functionName: 'specialty-create',
+      handlerPath: `${SRC_FEATURES}/specialty/create/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
     const lambdaPartnerGetBySpecialty = new Lambda(this, {
       functionName: 'partner-get-by-specialty',
       handlerPath: `${SRC_FEATURES}/partner/get-by-specialty/controller.ts`,      
@@ -32,6 +44,14 @@ export class CdkStack extends cdk.Stack {
       policies: [dynamoPolicy]      
     })
 
+
+    const lambdaPartnerServiceCreate = new Lambda(this, {
+      functionName: 'partner-service-create',
+      handlerPath: `${SRC_FEATURES}/partner-service/create/controller.ts`,      
+      timeout: cdk.Duration.seconds(60 * 5),
+      policies: [dynamoPolicy]      
+    })
+
     // api gtw
 
     const beKairosRestApi = new ApiGatewayRestApi(this, {
@@ -40,7 +60,19 @@ export class CdkStack extends cdk.Stack {
       stage: ENVIRONMENT,
       resources: [
         {
-          path: "/partner/{specialtyId}/specialty",
+          path: "/partner",
+          enableCors: true,
+          lambdaIntegration: lambdaPartnerCreate.func,
+          method: "POST"
+        },
+        {
+          path: "/specialty",
+          enableCors: true,
+          lambdaIntegration: lambdaSpecialtyCreate.func,
+          method: "POST"
+        },
+        {
+          path: "/partner/specialty/{specialtyId}",
           enableCors: true,
           lambdaIntegration: lambdaPartnerGetBySpecialty.func,
           method: "GET"
@@ -49,6 +81,12 @@ export class CdkStack extends cdk.Stack {
           path: "/schedule",
           enableCors: true,
           lambdaIntegration: lambdaScheduleCreate.func,
+          method: "POST"
+        },
+        {
+          path: "/partner/{specialtyId}/service",
+          enableCors: true,
+          lambdaIntegration: lambdaPartnerServiceCreate.func,
           method: "POST"
         }
       ]
