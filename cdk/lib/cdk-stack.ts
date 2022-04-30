@@ -31,6 +31,12 @@ export class CdkStack extends cdk.Stack {
       policies: [dynamoPolicy]      
     })
 
+    const lambdaSpecialtyGet = new Lambda(this, {
+      functionName: 'specialty-get',
+      handlerPath: `${SRC_FEATURES}/specialty/get/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
     const lambdaPartnerGetBySpecialty = new Lambda(this, {
       functionName: 'partner-get-by-specialty',
       handlerPath: `${SRC_FEATURES}/partner/get-by-specialty/controller.ts`,      
@@ -70,6 +76,12 @@ export class CdkStack extends cdk.Stack {
           enableCors: true,
           lambdaIntegration: lambdaSpecialtyCreate.func,
           method: "POST"
+        },
+        {
+          path: "/specialty",
+          enableCors: false,
+          lambdaIntegration: lambdaSpecialtyGet.func,
+          method: "GET"
         },
         {
           path: "/partner/specialty/{specialtyId}",

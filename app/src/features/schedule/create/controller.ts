@@ -1,8 +1,7 @@
 import { handleError } from '@common/errors/handle-error'
 import { ok } from '@common/responses/responses'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
-import { IntervalRequest } from '../request-models'
-import { createSchedule } from './usecase'
+import { createSchedule, IntervalRequest } from './usecase'
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {

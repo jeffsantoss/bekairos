@@ -105,7 +105,10 @@ export const beKairosSchema = {
       sk: { type: String, value: 'specialty:' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       name: { type: String, required: true, unique: true },
-      description: { type: String, required: false }
+      description: { type: String, required: false },
+
+      gs1pk: { type: String, value: 'specialty:' },
+      gs1sk: { type: String, value: 'specialty:${name}' }
     }
   }
 }
