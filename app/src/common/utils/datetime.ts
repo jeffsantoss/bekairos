@@ -8,3 +8,9 @@ export const dateTimeToString = (timestamp: number): string => {
 export const stringDateTimeToTimestamp = (dateTime: string): number => {
   return moment(dateTime, DATE_TIME_FORMAT).valueOf()
 }
+
+export const dateWithoutTime = (date: number) => {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  return d
+}

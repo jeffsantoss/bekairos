@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core'
 import { ApiGatewayRestApiProps } from './models'
 import * as apigw from '@aws-cdk/aws-apigateway'
-import * as iam from '@aws-cdk/aws-iam'
+
 export class ApiGatewayRestApi extends cdk.Construct {
   api: apigw.RestApi
 

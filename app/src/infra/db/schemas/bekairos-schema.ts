@@ -1,3 +1,4 @@
+import { TicketStatus } from '@common/constants'
 import { Matcher } from '@common/validation/matchers'
 
 export const beKairosSchema = {
@@ -35,9 +36,13 @@ export const beKairosSchema = {
         required: false
       },
       photo: { type: String, required: false },
+      createdAt: { type: Number, required: true },
 
       gs1pk: { type: String, value: 'partner:specialty:${specialtyId}' },
-      gs1sk: { type: String, value: 'partner:specialty:' }
+      gs1sk: { type: String, value: 'partner:specialty:' },
+
+      gs2pk: { type: String, value: 'partner:' },
+      gs2sk: { type: String, value: 'partner:${createdAt}' }
     },
     PartnerService: {
       pk: { type: String, value: 'partner-service:${id}' },
@@ -65,7 +70,8 @@ export const beKairosSchema = {
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       partnerServiceId: { type: String, required: true },
       start: { type: Number, required: true },
-      end: { type: Number, required: true }
+      end: { type: Number, required: true },
+      interval: { type: Number, required: true }
     },
     UserDetails: {
       pk: { type: String, value: 'user-details:${id}' },
@@ -74,12 +80,13 @@ export const beKairosSchema = {
       name: { type: String, required: true },
       phone: { type: String, required: true }
     },
-    Scheduling: {
-      pk: { type: String, value: 'scheduling:${userId}:${id}' },
-      sk: { type: String, value: 'scheduling:' },
+    Ticket: {
+      pk: { type: String, value: 'ticket:${userId}:${id}' },
+      sk: { type: String, value: 'ticket:' },
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       userId: { type: String, required: true },
-      scheduleId: { type: String, required: true }
+      scheduleId: { type: String, required: true },
+      status: { type: String, enum: Object.keys(TicketStatus), default: TicketStatus.SCHEDULED }
     },
     UserFavoritePartner: {
       pk: { type: String, value: 'user-favorite-partner:${userId}:${scheduleId}' },
@@ -118,7 +125,7 @@ export const BeKairosModels = {
   PartnerService: 'PartnerService',
   Schedule: 'Schedule',
   UserDetails: 'UserDetails',
-  Scheduling: 'Scheduling',
+  Ticket: 'Ticket',
   UserFavoritePartner: 'UserFavoritePartner',
   Specialty: 'Specialty',
   Review: 'Review'

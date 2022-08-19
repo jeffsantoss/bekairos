@@ -74,7 +74,7 @@ export const createSchedule = async (request: CreateScheduleRequest): Promise<Sc
       )} até ${dateTimeToString(end)}`
     )
 
-    await create(currentDate, end, request.serviceId)
+    await create(currentDate, end, request.serviceId, request.serviceDurationInMinutes)
 
     currentDate = end.valueOf()
 
@@ -84,13 +84,14 @@ export const createSchedule = async (request: CreateScheduleRequest): Promise<Sc
   return response
 }
 
-const create = async (start: number, end: number, partnerServiceId: string) => {
+const create = async (start: number, end: number, partnerServiceId: string, interval: number) => {
   const dbConnection = await getBeKairosDBConnection()
 
   await dbConnection.getModelFor<ScheduleEntity>(BeKairosModels.Schedule).create({
     id: v4(),
     start,
     end,
-    partnerServiceId
+    partnerServiceId,
+    interval
   })
 }

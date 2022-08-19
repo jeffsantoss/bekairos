@@ -17,11 +17,19 @@ export interface PartnerResponse {
   reviewAvg?: number
   distance?: string
   specialty: SpecialtyResponse
+  services: PartnerServiceResponse[]
 }
 
 export interface SpecialtyResponse {
   id: string
   name: string
+}
+
+export interface PartnerServiceResponse {
+  id: string
+  name: string
+  price: number
+  description?: string
 }
 
 export const getBySpecialty = async (

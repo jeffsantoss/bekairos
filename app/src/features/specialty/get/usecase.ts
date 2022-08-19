@@ -1,7 +1,6 @@
 import { getBeKairosDBConnection } from '@infra/db/db'
 import { SpecialtyEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
-import { v4 } from 'uuid'
 
 interface SpecialtyResponse {
   id: string
