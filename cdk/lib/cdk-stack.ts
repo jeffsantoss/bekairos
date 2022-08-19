@@ -25,6 +25,38 @@ export class CdkStack extends cdk.Stack {
       policies: [dynamoPolicy]      
     })
 
+    const lambdaPartnerGetBySpecialty = new Lambda(this, {
+      functionName: 'partner-get-by-specialty',
+      handlerPath: `${SRC_FEATURES}/partner/get-by-specialty/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
+    const lambdaGetPartnerById = new Lambda(this, {
+      functionName: 'partner-get-by-id',
+      handlerPath: `${SRC_FEATURES}/partner/get-by-id/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
+
+    const lambdaGetPartners = new Lambda(this, {
+      functionName: 'partner-get-by-id',
+      handlerPath: `${SRC_FEATURES}/partner/get/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
+
+    const lambdaCreateTicket = new Lambda(this, {
+      functionName: 'create-ticket',
+      handlerPath: `${SRC_FEATURES}/ticket/create/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
+    const lambdaGetTicket = new Lambda(this, {
+      functionName: 'create-ticket',
+      handlerPath: `${SRC_FEATURES}/ticket/get/controller.ts`,      
+      policies: [dynamoPolicy]      
+    })
+
     const lambdaSpecialtyCreate = new Lambda(this, {
       functionName: 'specialty-create',
       handlerPath: `${SRC_FEATURES}/specialty/create/controller.ts`,      
@@ -34,12 +66,6 @@ export class CdkStack extends cdk.Stack {
     const lambdaSpecialtyGet = new Lambda(this, {
       functionName: 'specialty-get',
       handlerPath: `${SRC_FEATURES}/specialty/get/controller.ts`,      
-      policies: [dynamoPolicy]      
-    })
-
-    const lambdaPartnerGetBySpecialty = new Lambda(this, {
-      functionName: 'partner-get-by-specialty',
-      handlerPath: `${SRC_FEATURES}/partner/get-by-specialty/controller.ts`,      
       policies: [dynamoPolicy]      
     })
 
@@ -58,6 +84,15 @@ export class CdkStack extends cdk.Stack {
       policies: [dynamoPolicy]      
     })
 
+
+
+    const lambdaGetScheduleFromPartnerService = new Lambda(this, {
+      functionName: 'schedule-from-partner-service',
+      handlerPath: `${SRC_FEATURES}/schedule/get-by-partner-service/controller.ts`,      
+      timeout: cdk.Duration.seconds(60 * 5),
+      policies: [dynamoPolicy]      
+    })
+
     // api gtw
 
     const beKairosRestApi = new ApiGatewayRestApi(this, {
@@ -72,6 +107,36 @@ export class CdkStack extends cdk.Stack {
           method: "POST"
         },
         {
+          path: "/partner/specialty/{id}",
+          enableCors: true,
+          lambdaIntegration: lambdaPartnerGetBySpecialty.func,
+          method: "GET"
+        },
+        {
+          path: "/partner/{id}",
+          enableCors: true,
+          lambdaIntegration: lambdaGetPartnerById.func,
+          method: "GET"
+        },
+        {
+          path: "/partner",
+          enableCors: true,
+          lambdaIntegration: lambdaGetPartners.func,
+          method: "GET"
+        },
+        {
+          path: "/ticket",
+          enableCors: true,
+          lambdaIntegration: lambdaCreateTicket.func,
+          method: "POST"
+        },
+        {
+          path: "/ticket",
+          enableCors: true,
+          lambdaIntegration: lambdaGetTicket.func,
+          method: "GET"
+        }
+        {
           path: "/specialty",
           enableCors: true,
           lambdaIntegration: lambdaSpecialtyCreate.func,
@@ -82,12 +147,6 @@ export class CdkStack extends cdk.Stack {
           enableCors: false,
           lambdaIntegration: lambdaSpecialtyGet.func,
           method: "GET"
-        },
-        {
-          path: "/partner/specialty/{specialtyId}",
-          enableCors: true,
-          lambdaIntegration: lambdaPartnerGetBySpecialty.func,
-          method: "GET"
         },      
         {
           path: "/schedule",
@@ -96,10 +155,16 @@ export class CdkStack extends cdk.Stack {
           method: "POST"
         },
         {
-          path: "/partner/{specialtyId}/service",
+          path: "/partner/{id}/service",
           enableCors: true,
           lambdaIntegration: lambdaPartnerServiceCreate.func,
           method: "POST"
+        },
+        {
+          path: "/partner-service/{id}/schedule",
+          enableCors: true,
+          lambdaIntegration: lambdaGetScheduleFromPartnerService.func,
+          method: "GET"
         }
       ]
     })
