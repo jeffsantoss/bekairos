@@ -1,13 +1,13 @@
-import { BadArgumentError, ConflictError, NotFoundError } from '@common/errors/api-errors'
+import { ConflictError, NotFoundError } from '@common/errors/api-errors'
 import { getBeKairosDBConnection } from '@infra/db/db'
-import { PartnerEntity, PartnerServiceEntity, SpecialtyEntity } from '@infra/db/models/bekairos-models'
+import { PartnerEntity, PartnerServiceEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { v4 } from 'uuid'
 
 export interface CreatePartnerServiceRequest {
   partnerId: string
   name: string
-  price: string
+  price: number
   description?: string
 }
 

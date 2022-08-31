@@ -18,13 +18,17 @@ export const createPartner = async (request: CreatePartnerRequest): Promise<stri
 
   if (!specialty) throw new BadArgumentError('specialtyId', 'specialty_not_found')
 
-  const getBySpecialty = await dbConnection.getModelFor<PartnerEntity>(BeKairosModels.Partner).find({
-    specialtyId: request.specialtyId
-  })
+  const getBySpecialty = await dbConnection.getModelFor<PartnerEntity>(BeKairosModels.Partner).find(
+    {
+      specialtyId: request.specialtyId
+    },
+    { index: 'gs1', follow: true }
+  )
 
   const withSameName = getBySpecialty.filter(
     (g) => g.name.trim().toLowerCase() == request.name.trim().toLocaleLowerCase()
   )
+
   if (withSameName != null && withSameName.length > 0) {
     throw new ConflictError(withSameName[0].id)
   }
@@ -38,7 +42,8 @@ export const createPartner = async (request: CreatePartnerRequest): Promise<stri
     id,
     name: request.name,
     ownerId: request?.ownerId ?? v4(),
-    specialtyId: request.specialtyId
+    specialtyId: request.specialtyId,
+    createdAt: Date.now()
   })
 
   console.log(`Parceiro criado com sucesso!!`)

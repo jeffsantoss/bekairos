@@ -1,6 +1,8 @@
+import { ConflictError } from '@common/errors/api-errors'
 import { getBeKairosDBConnection } from '@infra/db/db'
 import { SpecialtyEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
+import { OneError } from 'dynamodb-onetable'
 import { v4 } from 'uuid'
 
 interface CreateSpecialtyRequest {
@@ -13,11 +15,16 @@ export const createSpecialty = async (request: CreateSpecialtyRequest): Promise<
   console.log(`Criando especialidade ${request.name}`)
 
   const id = v4()
-
-  await dbConnection.getModelFor<SpecialtyEntity>(BeKairosModels.Specialty).create({
-    id,
-    name: request.name
-  })
+  try {
+    await dbConnection.getModelFor<SpecialtyEntity>(BeKairosModels.Specialty).create({
+      id,
+      name: request.name
+    })
+  } catch (e) {
+    if (e.code == 'UniqueError') {
+      throw new ConflictError(request.name)
+    }
+  }
 
   console.log(`Especialidade criado com sucesso!!`)
 

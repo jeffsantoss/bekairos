@@ -6,12 +6,12 @@ import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { dateWithoutTime } from '@common/utils/datetime'
 import { PartnerResponse, PartnerServiceResponse } from '@features/partner/get-by-specialty/usecase'
 
-interface ScheduleResponse {
+export interface ScheduleResponse {
   partner: PartnerResponse
   schedules: AttendanceResponse[]
 }
 
-interface AttendanceResponse {
+export interface AttendanceResponse {
   id: string
   start: number
   end: number
@@ -25,30 +25,35 @@ export interface GetScheduleByPartnerServiceRequest {
 
 export const getScheduleByPartnerService = async (
   request: GetScheduleByPartnerServiceRequest
-): Promise<AttendanceResponse[]> => {
+): Promise<ScheduleResponse> => {
   const dbConnection = await getBeKairosDBConnection()
-
-  console.log(`Searching service if exists`)
 
   const service = await dbConnection
     .getModelFor<PartnerServiceEntity>(BeKairosModels.PartnerService)
     .get({ id: request.serviceId })
 
-  const partner = await dbConnection.getModelFor<PartnerEntity>(BeKairosModels.Partner).get({ id: service.partnerId })
-
   if (!service) throw new NotFoundError(request.serviceId)
+
+  const partner = await dbConnection.getModelFor<PartnerEntity>(BeKairosModels.Partner).get({ id: service.partnerId })
 
   const schedules = await dbConnection
     .getModelFor<ScheduleEntity>(BeKairosModels.Schedule)
-    .find({ partnerServiceId: request.serviceId })
+    .find({ partnerServiceId: request.serviceId }, { index: 'gs2', follow: true })
 
   const attendances: AttendanceResponse[] = []
 
   schedules.map((s) => {
     if (
-      dateWithoutTime(s.start) == dateWithoutTime(request.date) ||
+      (request.date && dateWithoutTime(s.start) == dateWithoutTime(request.date)) ||
       dateWithoutTime(s.end) == dateWithoutTime(request.date)
     ) {
+      attendances.push({
+        id: s.id,
+        end: s.end,
+        start: s.start,
+        interval: s.interval
+      })
+    } else {
       attendances.push({
         id: s.id,
         end: s.end,
@@ -62,10 +67,6 @@ export const getScheduleByPartnerService = async (
     partner: {
       id: service.partnerId,
       name: partner.name,
-      specialty: {
-        id: partner.specialtyId,
-        name: partner.specialtyId
-      },
       services: Array(service).map(
         (s) =>
           <PartnerServiceResponse>{

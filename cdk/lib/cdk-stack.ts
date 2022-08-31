@@ -1,6 +1,5 @@
 import * as cdk from '@aws-cdk/core'
 import * as iam from '@aws-cdk/aws-iam'
-import * as lambda from '@aws-cdk/aws-lambda'
 import { Lambda } from './lambda/lambda'
 import { ENVIRONMENT } from './environment'
 import { ApiGatewayRestApi } from './api-gateway/api-gateway-rest-api'
@@ -39,7 +38,7 @@ export class CdkStack extends cdk.Stack {
 
 
     const lambdaGetPartners = new Lambda(this, {
-      functionName: 'partner-get-by-id',
+      functionName: 'partner-get-all',
       handlerPath: `${SRC_FEATURES}/partner/get/controller.ts`,      
       policies: [dynamoPolicy]      
     })
@@ -52,7 +51,7 @@ export class CdkStack extends cdk.Stack {
     })
 
     const lambdaGetTicket = new Lambda(this, {
-      functionName: 'create-ticket',
+      functionName: 'ticket-get',
       handlerPath: `${SRC_FEATURES}/ticket/get/controller.ts`,      
       policies: [dynamoPolicy]      
     })
@@ -76,6 +75,12 @@ export class CdkStack extends cdk.Stack {
       policies: [dynamoPolicy]      
     })
 
+    const scheduleGetById = new Lambda(this, {
+      functionName: 'schedule-get-by-id',
+      handlerPath: `${SRC_FEATURES}/schedule/get-by-id/controller.ts`,      
+      timeout: cdk.Duration.seconds(60 * 5),
+      policies: [dynamoPolicy]      
+    })
 
     const lambdaPartnerServiceCreate = new Lambda(this, {
       functionName: 'partner-service-create',
@@ -87,8 +92,8 @@ export class CdkStack extends cdk.Stack {
 
 
     const lambdaGetScheduleFromPartnerService = new Lambda(this, {
-      functionName: 'schedule-from-partner-service',
-      handlerPath: `${SRC_FEATURES}/schedule/get-by-partner-service/controller.ts`,      
+      functionName: 'partner-service-get-schedules',
+      handlerPath: `${SRC_FEATURES}/partner-service/get-schedules/controller.ts`,      
       timeout: cdk.Duration.seconds(60 * 5),
       policies: [dynamoPolicy]      
     })
@@ -135,7 +140,7 @@ export class CdkStack extends cdk.Stack {
           enableCors: true,
           lambdaIntegration: lambdaGetTicket.func,
           method: "GET"
-        }
+        },
         {
           path: "/specialty",
           enableCors: true,
@@ -155,7 +160,13 @@ export class CdkStack extends cdk.Stack {
           method: "POST"
         },
         {
-          path: "/partner/{id}/service",
+          path: "/schedule/{id}",
+          enableCors: true,
+          lambdaIntegration: scheduleGetById.func,
+          method: "GET"
+        },
+        {
+          path: "/partner-service/",
           enableCors: true,
           lambdaIntegration: lambdaPartnerServiceCreate.func,
           method: "POST"

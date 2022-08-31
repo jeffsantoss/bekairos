@@ -3,56 +3,96 @@
 // import { createRequestObject } from '@core-tests/utils/api-gateway-request-mock'
 // import { handler } from '@features/schedule/create/controller'
 
-// describe('create schedule controller', () => {
-//   test('should create succesfully when has only one interval', async () => {
-//     const body: CreateScheduleRequest = {
-//       startJourney: stringDateTimeToTimestamp('05/04/2022 09:00'),
-//       endJourney: stringDateTimeToTimestamp('05/04/2022 17:00'),
-//       serviceDurationInMinutes: 30,
-//       serviceId: PARTNER_SERVICE_FIXTURE.id,
-//       intervals: [
-//         {
-//           start: stringDateTimeToTimestamp('05/04/2022 12:00'),
-//           end: stringDateTimeToTimestamp('05/04/2022 13:30')
-//         }
-//       ]
-//     }
+import { stringDateTimeToTimestamp } from '@common/utils/datetime'
+import { PARTNER_SERVICE_FIXTURE } from '@core-tests/db/db-fixture'
+import { createRequestObject } from '@core-tests/utils/api-gateway-request-mock'
+import { handler } from '@features/schedule/create/controller'
+import { CreateScheduleRequest, ScheduleResponse } from '@features/schedule/create/usecase'
 
-//     const result = await handler(createRequestObject('GET', JSON.stringify(body), {}))
+describe('create schedule controller', () => {
+  //   test('should create succesfully when has only one interval', async () => {
+  //     const body: CreateScheduleRequest = {
+  //       startJourney: stringDateTimeToTimestamp('05/04/2022 09:00'),
+  //       endJourney: stringDateTimeToTimestamp('05/04/2022 17:00'),
+  //       serviceDurationInMinutes: 30,
+  //       serviceId: PARTNER_SERVICE_FIXTURE.id,
+  //       intervals: [
+  //         {
+  //           start: stringDateTimeToTimestamp('05/04/2022 12:00'),
+  //           end: stringDateTimeToTimestamp('05/04/2022 13:30')
+  //         }
+  //       ]
+  //     }
 
-//     const bodyResponse: ScheduleResponse = JSON.parse(result.body)
+  //     const result = await handler(createRequestObject('GET', JSON.stringify(body), {}))
 
-//     /*
-//       09:00~09:30|09:30~10:00|10:00~10:30|10:30~11:00|11:00~11:30|11:30~12:00|13:30~14:00|14:00~14:30|14:30~15:00|15:00~15:30|15:30~16:00|16:00~16:30|16:30~17:00
-//     */
-//     expect(bodyResponse.schedules.length).toBe(13)
-//   })
+  //     const bodyResponse: ScheduleResponse = JSON.parse(result.body)
 
-//   test('should create succesfully when has more one interval', async () => {
-//     const body: CreateScheduleRequest = {
-//       startJourney: stringDateTimeToTimestamp('05/04/2022 09:00'),
-//       endJourney: stringDateTimeToTimestamp('05/04/2022 17:00'),
-//       serviceDurationInMinutes: 30,
-//       serviceId: PARTNER_SERVICE_FIXTURE.id,
-//       intervals: [
-//         {
-//           start: stringDateTimeToTimestamp('05/04/2022 12:00'),
-//           end: stringDateTimeToTimestamp('05/04/2022 13:30')
-//         },
-//         {
-//           start: stringDateTimeToTimestamp('05/04/2022 15:00'),
-//           end: stringDateTimeToTimestamp('05/04/2022 15:30')
-//         }
-//       ]
-//     }
+  //     /*
+  //       09:00~09:30|09:30~10:00|10:00~10:30|10:30~11:00|11:00~11:30|11:30~12:00|13:30~14:00|14:00~14:30|14:30~15:00|15:00~15:30|15:30~16:00|16:00~16:30|16:30~17:00
+  //     */
+  //     expect(bodyResponse.schedules.length).toBe(13)
+  //   })
 
-//     const result = await handler(createRequestObject('GET', JSON.stringify(body), {}))
+  test('should create succesfully when has more one interval', async () => {
+    console.log('startJorney: ' + stringDateTimeToTimestamp('05/04/2022 09:00'))
+    console.log('endJorney: ' + stringDateTimeToTimestamp('05/04/2022 17:00'))
+    const body: CreateScheduleRequest = {
+      startJourney: stringDateTimeToTimestamp('05/04/2022 09:00'),
+      endJourney: stringDateTimeToTimestamp('05/04/2022 17:00'),
+      serviceDurationInMinutes: 30,
+      serviceId: PARTNER_SERVICE_FIXTURE.id,
+      intervals: [
+        {
+          start: stringDateTimeToTimestamp('05/04/2022 12:00'),
+          end: stringDateTimeToTimestamp('05/04/2022 13:30')
+        },
+        {
+          start: stringDateTimeToTimestamp('05/04/2022 15:00'),
+          end: stringDateTimeToTimestamp('05/04/2022 15:30')
+        }
+      ]
+    }
 
-//     const bodyResponse: ScheduleResponse = JSON.parse(result.body)
+    const result = await handler(createRequestObject('GET', JSON.stringify(body), {}))
 
-//     /*
-//       09:00~09:30|09:30~10:00|10:00~10:30|10:30~11:00|11:00~11:30|11:30~12:00|13:30~14:00|14:00~14:30|14:30~15:00|15:30~16:00|16:00~16:30|16:30~17:00
-//     */
-//     expect(bodyResponse.schedules.length).toBe(12)
-//   })
-// })
+    const bodyResponse: ScheduleResponse = JSON.parse(result.body)
+
+    /*
+      09:00~09:30|09:30~10:00|10:00~10:30|10:30~11:00|11:00~11:30|11:30~12:00|13:30~14:00|14:00~14:30|14:30~15:00|15:30~16:00|16:00~16:30|16:30~17:00
+    */
+    expect(bodyResponse.schedules.length).toBe(12)
+  })
+
+  test('should not create two schedule with same start and end to same service', async () => {
+    console.log('startJorney: ' + stringDateTimeToTimestamp('05/04/2022 09:00'))
+    console.log('endJorney: ' + stringDateTimeToTimestamp('05/04/2022 17:00'))
+    const body: CreateScheduleRequest = {
+      startJourney: stringDateTimeToTimestamp('05/04/2022 09:00'),
+      endJourney: stringDateTimeToTimestamp('05/04/2022 17:00'),
+      serviceDurationInMinutes: 30,
+      serviceId: PARTNER_SERVICE_FIXTURE.id,
+      intervals: [
+        {
+          start: stringDateTimeToTimestamp('05/04/2022 12:00'),
+          end: stringDateTimeToTimestamp('05/04/2022 13:30')
+        },
+        {
+          start: stringDateTimeToTimestamp('05/04/2022 15:00'),
+          end: stringDateTimeToTimestamp('05/04/2022 15:30')
+        }
+      ]
+    }
+
+    const result1 = await handler(createRequestObject('GET', JSON.stringify(body), {}))
+
+    const result2 = await handler(createRequestObject('GET', JSON.stringify(body), {}))
+
+    const bodyResponse: ScheduleResponse = JSON.parse(result1.body)
+
+    /*
+      09:00~09:30|09:30~10:00|10:00~10:30|10:30~11:00|11:00~11:30|11:30~12:00|13:30~14:00|14:00~14:30|14:30~15:00|15:30~16:00|16:00~16:30|16:30~17:00
+    */
+    expect(bodyResponse.schedules.length).toBe(12)
+  })
+})

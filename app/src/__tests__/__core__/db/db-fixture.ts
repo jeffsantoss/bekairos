@@ -37,7 +37,8 @@ export const PARTNER_FIXTURE: PartnerEntity = {
     street: 'Servidão Maria Tomásia Cabral',
     streetNumber: 31
   },
-  photo: 'photo.png'
+  photo: 'photo.png',
+  createdAt: Date.now()
 }
 
 export const PARTNER_SERVICE_FIXTURE: PartnerServiceEntity = {

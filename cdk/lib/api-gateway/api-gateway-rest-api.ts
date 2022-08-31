@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core'
 import { ApiGatewayRestApiProps } from './models'
 import * as apigw from '@aws-cdk/aws-apigateway'
+import { Method } from '@aws-cdk/aws-apigateway'
 
 export class ApiGatewayRestApi extends cdk.Construct {
   api: apigw.RestApi
@@ -21,19 +22,22 @@ export class ApiGatewayRestApi extends cdk.Construct {
       ?.filter((resource) => resource.lambdaIntegration)
       .forEach((resourceProps) => {
         const resource = api.root.resourceForPath(resourceProps.path)
-
-        if (resourceProps.enableCors)
+        
+        if (resourceProps.enableCors && resource.path == '/')
           resource.addCorsPreflight({
             allowOrigins: ['*'],
             allowHeaders: ['*'],
-            allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+            allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
           })
 
-        resource.addMethod(
-          resourceProps.method,
-          // @ts-ignore
-          new apigw.LambdaIntegration(resourceProps.lambdaIntegration!, { proxy: true })
-        )
+        if (!(resource.parentResource?.node.tryFindChild(resourceProps.method) instanceof Method)) {
+          resource.addMethod(
+            resourceProps.method,
+            // @ts-ignore
+            new apigw.LambdaIntegration(resourceProps.lambdaIntegration!, { proxy: true })
+          )
+        }
+
       })
 
     const deployment = new apigw.Deployment(this, props.nameDeployment, { api })

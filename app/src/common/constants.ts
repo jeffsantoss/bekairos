@@ -5,3 +5,8 @@ export enum TicketStatus {
   ON_HOLD,
   FINISHED
 }
+
+export enum EntityStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive'
+}

@@ -5,7 +5,7 @@ import { getBeKairosDBConnection } from '@infra/db/db'
 import { PartnerEntity, SpecialtyEntity, ReviewEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 
-interface GetAffiliatesBySpecialty {
+interface GetPartnerBySpecialty {
   lat: string
   long: string
 }
@@ -16,7 +16,7 @@ export interface PartnerResponse {
   address?: any
   reviewAvg?: number
   distance?: string
-  specialty: SpecialtyResponse
+  specialty?: SpecialtyResponse
   services: PartnerServiceResponse[]
 }
 
@@ -34,7 +34,7 @@ export interface PartnerServiceResponse {
 
 export const getBySpecialty = async (
   specialtyId: string,
-  request: GetAffiliatesBySpecialty
+  request: GetPartnerBySpecialty
 ): Promise<PartnerResponse[]> => {
   const dbConnection = await getBeKairosDBConnection()
 

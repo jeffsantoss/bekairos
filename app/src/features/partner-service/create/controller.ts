@@ -7,12 +7,14 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   try {
     // await authorizeResourceAccess(event) somente master acessar
     const body = JSON.parse(event.body)
+
     const req: CreatePartnerServiceRequest = {
       name: body.name,
-      partnerId: event.pathParameters.specialtyId,
+      partnerId: body.partnerId,
       price: body.price,
       description: body.description
     }
+
     const id = await createPartnerService(req)
     return created({ id })
   } catch (e) {

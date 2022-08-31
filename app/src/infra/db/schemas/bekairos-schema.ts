@@ -1,4 +1,4 @@
-import { TicketStatus } from '@common/constants'
+import { EntityStatus, TicketStatus } from '@common/constants'
 import { Matcher } from '@common/validation/matchers'
 
 export const beKairosSchema = {
@@ -37,11 +37,12 @@ export const beKairosSchema = {
       },
       photo: { type: String, required: false },
       createdAt: { type: Number, required: true },
+      status: { type: String, default: 'active', enum: Object.values(EntityStatus) },
 
       gs1pk: { type: String, value: 'partner:specialty:${specialtyId}' },
       gs1sk: { type: String, value: 'partner:specialty:' },
 
-      gs2pk: { type: String, value: 'partner:' },
+      gs2pk: { type: String, value: 'partner:${status}' },
       gs2sk: { type: String, value: 'partner:${createdAt}' }
     },
     PartnerService: {
@@ -71,7 +72,14 @@ export const beKairosSchema = {
       partnerServiceId: { type: String, required: true },
       start: { type: Number, required: true },
       end: { type: Number, required: true },
-      interval: { type: Number, required: true }
+      interval: { type: Number, required: true },
+      startEndPerServiceUk: { type: String, value: 'schedule:${partnerServiceId}:${start}:${end}', unique: true },
+
+      gs1pk: { type: String, value: 'schedule:${specialtyId}' },
+      gs1sk: { type: String, value: 'schedule' },
+
+      gs2pk: { type: String, value: 'schedule:${partnerServiceId}' },
+      gs2sk: { type: String, value: 'schedule' }
     },
     UserDetails: {
       pk: { type: String, value: 'user-details:${id}' },
@@ -86,7 +94,10 @@ export const beKairosSchema = {
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       userId: { type: String, required: true },
       scheduleId: { type: String, required: true },
-      status: { type: String, enum: Object.keys(TicketStatus), default: TicketStatus.SCHEDULED }
+      status: { type: String, enum: Object.keys(TicketStatus), default: TicketStatus.SCHEDULED },
+
+      gs1pk: { type: String, value: 'ticket:${userId}:${scheduleId}' },
+      gs1sk: { type: String, value: 'ticket' }
     },
     UserFavoritePartner: {
       pk: { type: String, value: 'user-favorite-partner:${userId}:${scheduleId}' },

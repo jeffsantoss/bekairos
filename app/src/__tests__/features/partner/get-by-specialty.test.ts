@@ -8,10 +8,8 @@ describe('get by category controller', () => {
       createRequestObject(
         'GET',
         JSON.stringify({
-          coordinates: {
-            lat: '-27.4408035',
-            long: '-48.3935988'
-          }
+          lat: '-27.4408035',
+          long: '-48.3935988'
         }),
         {},
         {

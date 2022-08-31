@@ -48,7 +48,7 @@ export class ForbiddenError extends ApiError {
 
 export class ConflictError extends ApiError {
   constructor(argument?: string) {
-    super(StatusCode.CONFLICT, `Resource already exists` + (argument ? `:${argument}` : ''))
+    super(StatusCode.CONFLICT, `Resource already exists` + (argument ? `: ${argument}` : ''))
   }
 }
 

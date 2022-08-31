@@ -1,5 +1,5 @@
 /* eslint-disable no-loops/no-loops */
-import { NotFoundError } from '@common/errors/api-errors'
+import { ConflictError, NotFoundError } from '@common/errors/api-errors'
 import { getBeKairosDBConnection } from '@infra/db/db'
 import { PartnerServiceEntity, ScheduleEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
@@ -87,11 +87,18 @@ export const createSchedule = async (request: CreateScheduleRequest): Promise<Sc
 const create = async (start: number, end: number, partnerServiceId: string, interval: number) => {
   const dbConnection = await getBeKairosDBConnection()
 
-  await dbConnection.getModelFor<ScheduleEntity>(BeKairosModels.Schedule).create({
-    id: v4(),
-    start,
-    end,
-    partnerServiceId,
-    interval
-  })
+  try {
+    await dbConnection.getModelFor<ScheduleEntity>(BeKairosModels.Schedule).create({
+      id: v4(),
+      start,
+      end,
+      partnerServiceId,
+      interval
+    })
+  } catch (e) {
+    if (e.code == 'UniqueError') {
+      throw new ConflictError(`${dateTimeToString(start)}|${dateTimeToString(end)}`)
+    }
+    throw e
+  }
 }

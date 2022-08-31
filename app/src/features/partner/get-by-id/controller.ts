@@ -1,7 +1,7 @@
 import { handleError } from '@common/errors/handle-error'
 import { ok } from '@common/responses/responses'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
-import { getAllPartners } from './usecase'
+import { getAllPartners } from '../get/usecase'
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
