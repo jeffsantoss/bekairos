@@ -1,19 +1,9 @@
-import { dateWithoutTime } from '@common/utils/datetime'
 import { calculateDistanceBetweenCoordinates } from '@common/utils/geodist'
 import { average } from '@common/utils/math'
-import { AttendanceResponse } from '@features/partner-service/get-schedules/usecase'
 import { PartnerResponse, PartnerServiceResponse } from '@features/partner/get-by-specialty/usecase'
-import { ScheduleResponse } from '@features/schedule/create/usecase'
 import { getBeKairosDBConnection } from '@infra/db/db'
-import {
-  SpecialtyEntity,
-  ReviewEntity,
-  PartnerServiceEntity,
-  PartnerEntity,
-  ScheduleEntity
-} from '@infra/db/models/bekairos-models'
+import { SpecialtyEntity, ReviewEntity, PartnerServiceEntity, PartnerEntity } from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
-import { request } from 'http'
 
 export const getPartnerById = async (id: string, lat?: string, long?: string): Promise<PartnerResponse> => {
   const dbConnection = await getBeKairosDBConnection()
@@ -21,8 +11,8 @@ export const getPartnerById = async (id: string, lat?: string, long?: string): P
   const partner = await dbConnection.getModelFor<PartnerEntity>(BeKairosModels.Partner).get({ id })
 
   const specialties: SpecialtyEntity[] = []
-  const reviews: ReviewEntity[] = []
-  const services: PartnerServiceEntity[] = []
+  let reviewsList: ReviewEntity[] = []
+  let servicesList: PartnerServiceEntity[] = []
 
   const specialtyId = partner.specialtyId
 
@@ -40,8 +30,8 @@ export const getPartnerById = async (id: string, lat?: string, long?: string): P
       .find({ partnerId: partner.id }, { index: 'gs1', follow: true })
 
     specialties.push(specialty)
-    reviews.concat(reviews)
-    services.concat(partnerServices)
+    reviewsList = reviews.concat(reviews)
+    servicesList = servicesList.concat(partnerServices)
   } catch (e) {
     console.warn(e)
     return
@@ -68,7 +58,7 @@ export const getPartnerById = async (id: string, lat?: string, long?: string): P
     name: partner?.name,
     address: partner.address,
     distance: distance?.m?.toFixed(0),
-    services: services
+    services: servicesList
       .filter((s) => s.partnerId == partner.id)
       .map((s) => {
         return <PartnerServiceResponse>{
@@ -82,6 +72,6 @@ export const getPartnerById = async (id: string, lat?: string, long?: string): P
       id: specialty.id,
       name: specialty.name
     },
-    reviewAvg: average(reviews?.filter((r) => r.partnerId == partner.id)?.map((s) => s.score))
+    reviewAvg: average(reviewsList?.filter((r) => r.partnerId == partner.id)?.map((s) => s.score))
   }
 }

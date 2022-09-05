@@ -1,7 +1,7 @@
 import { EntityStatus } from '@common/constants'
 import { getBeKairosDBConnection } from '@infra/db/db'
 import { PartnerEntity } from '@infra/db/models/bekairos-models'
-import { getPartnerById } from '@infra/db/repository/partner/get/get-by-id'
+import { getPartnerById } from '@infra/db/repository/partner/get'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { PartnerResponse } from '../get-by-specialty/usecase'
 
@@ -25,7 +25,7 @@ export const getAllPartners = async (request: LocalizationRequest): Promise<Part
 
   await Promise.all(
     partners.map(async (partner) => {
-      response.push(await getPartnerById(partner, request?.lat, request?.long))
+      response.push(await getPartnerById(partner.id, request?.lat, request?.long))
     })
   )
 
