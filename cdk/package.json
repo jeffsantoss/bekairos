@@ -25,6 +25,7 @@
   "dependencies": {
     "@aws-cdk/assertions": "^1.143.0",
     "@aws-cdk/aws-apigateway": "^1.143.0",
+    "@aws-cdk/aws-cognito": "^1.143.0",
     "@aws-cdk/aws-dynamodb": "^1.143.0",
     "@aws-cdk/aws-lambda-nodejs": "^1.143.0",
     "@aws-cdk/core": "^1.143.0"

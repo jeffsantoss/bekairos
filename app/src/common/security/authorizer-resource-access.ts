@@ -10,27 +10,28 @@ export const authorizeResourceAccess = async (
   const jwtTokenString = jwtTokenFromAuthorizationHeader(event)
 
   const jwtToken = await authorize(jwtTokenString)
-
+  console.log(`Event: ${JSON.stringify(event)}`)
+  console.log(`JWT: ${JSON.stringify(jwtToken)}`)
   jwtTokenPayloadSingleton = JSON.parse(jwtToken.payload as string)
 
-  if (scopes) checkScopes(scopes)
+  // if (scopes) checkScopes(scopes)
 
   return jwtTokenPayloadSingleton
 }
 
-const checkScopes = (jwtPayload: any, ...args: string[]) => {
-  try {
-    const roles = jwtPayload['scopes'] as Array<string>
+// const checkScopes = (jwtPayload: any, ...args: string[]) => {
+//   try {
+//     const roles = jwtPayload['scopes'] as Array<string>
 
-    if (!roles) return false
+//     if (!roles) return false
 
-    console.log(`scopes from JWT: ${JSON.stringify(roles)}`)
+//     console.log(`scopes from JWT: ${JSON.stringify(roles)}`)
 
-    return roles.every((r) => args.includes(r))
-  } catch (e) {
-    console.log(`Failed to get scopes on JWT: ${e}`)
-    return false
-  }
-}
+//     return roles.every((r) => args.includes(r))
+//   } catch (e) {
+//     console.log(`Failed to get scopes on JWT: ${e}`)
+//     return false
+//   }
+// }
 
 export default jwtTokenPayloadSingleton

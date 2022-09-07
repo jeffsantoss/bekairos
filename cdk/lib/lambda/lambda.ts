@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as cdk from '@aws-cdk/core'
 import { LambdaProps } from './models'
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs'
-import { ATTACH_VPC, ENVIRONMENT, SECURITY_GROUP_ID, SUBNET_IDS, VPC_ID } from '../environment'
+import { ENVIRONMENT } from '../environment'
 
 export class Lambda extends cdk.Construct {
   func: lambda.Function
@@ -14,7 +14,7 @@ export class Lambda extends cdk.Construct {
   }
 
   createLambda = (props: LambdaProps): lambda.Function => {
-    const func = new NodejsFunction(this, props.functionName!, {
+    const func = new NodejsFunction(this, `${props.functionName!}-${ENVIRONMENT}`, {
       memorySize: 256,
       timeout: props.timeout ?? cdk.Duration.seconds(60 * 5),
       layers: props.layers,
