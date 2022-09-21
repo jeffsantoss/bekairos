@@ -67,7 +67,7 @@ export class ApiGatewayRestApi extends cdk.Construct {
 
               {
                 authorizationType: AuthorizationType.COGNITO,
-                authorizer: { authorizerId: auth.ref },                
+                authorizer: { authorizerId: auth.ref }                
               }
             )
           } else {

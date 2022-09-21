@@ -63,7 +63,11 @@ export const beKairosSchema = {
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       userId: { type: String, required: true },
       partnerServiceId: { type: String, required: true },
-      partnerId: { type: String, required: true }
+      partnerId: { type: String, required: true },
+      name: { type: String, required: true },
+
+      gs1pk: { type: String, value: 'partner-member:${partnerServiceId}' },
+      gs1sk: { type: String, value: 'partner-member:' }
     },
     Schedule: {
       pk: { type: String, value: 'schedule:${id}' },
@@ -136,6 +140,7 @@ export const BeKairosModels = {
   PartnerService: 'PartnerService',
   Schedule: 'Schedule',
   UserDetails: 'UserDetails',
+  PartnerMember: 'PartnerMember',
   Ticket: 'Ticket',
   UserFavoritePartner: 'UserFavoritePartner',
   Specialty: 'Specialty',

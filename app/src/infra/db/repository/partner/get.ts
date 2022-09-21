@@ -38,6 +38,7 @@ export const getPartnerById = async (id: string, lat?: string, long?: string): P
   }
 
   const specialty = specialties?.find((s) => s.id == partner.specialtyId)
+
   let distance
 
   if (lat && long) {

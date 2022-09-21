@@ -30,6 +30,12 @@ export interface PartnerServiceResponse {
   name: string
   price: number
   description?: string
+  professional: PartnerMemberResponse
+}
+
+export interface PartnerMemberResponse {
+  id: string
+  name: string
 }
 
 export const getBySpecialty = async (

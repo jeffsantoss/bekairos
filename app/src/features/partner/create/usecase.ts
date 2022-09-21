@@ -8,7 +8,17 @@ interface CreatePartnerRequest {
   name: string
   specialtyId: string
   ownerId?: string
+  address: AddressRequest
 }
+
+export interface AddressRequest {
+  uf: string
+  city: string
+  cep: string
+  street: string
+  streetNumber: string
+}
+
 export const createPartner = async (request: CreatePartnerRequest): Promise<string> => {
   const dbConnection = await getBeKairosDBConnection()
 
@@ -42,6 +52,7 @@ export const createPartner = async (request: CreatePartnerRequest): Promise<stri
     id,
     name: request.name,
     ownerId: request?.ownerId ?? v4(),
+    address: request.address,
     specialtyId: request.specialtyId,
     createdAt: Date.now()
   })

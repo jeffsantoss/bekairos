@@ -38,7 +38,7 @@ export const getScheduleById = async (scheduleId: string): Promise<ScheduleRespo
 
   const response: ScheduleResponse = {
     partner: {
-      id: service.partnerId,
+      id: partner.id,
       name: partner.name,
       services: Array(service).map(
         (s) =>
