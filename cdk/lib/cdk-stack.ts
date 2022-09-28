@@ -114,6 +114,14 @@ export class CdkStack extends cdk.Stack {
       env: commonEnv
     })
 
+    const lambdaPartnerMemberCreate = new lambda.Lambda(this, {
+      functionName: 'partner-member-create',
+      handlerPath: `${SRC_FEATURES}/partner-member/create/controller.ts`,
+      timeout: cdk.Duration.seconds(60 * 5),
+      policies: [dynamoPolicy],
+      env: commonEnv
+    })
+
     // api gtw
 
     const beKairosRestApi = new ApiGatewayRestApi(this, {
@@ -193,7 +201,14 @@ export class CdkStack extends cdk.Stack {
           enableCors: true,
           lambdaIntegration: lambdaGetScheduleFromPartnerService.func,
           method: "GET"
+        }, 
+        {
+          path: "/partner-member/",
+          enableCors: true,
+          lambdaIntegration: lambdaPartnerMemberCreate.func,
+          method: "POST"
         }
+
       ]
     })
 
