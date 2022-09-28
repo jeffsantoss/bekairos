@@ -1,7 +1,12 @@
 /* eslint-disable no-loops/no-loops */
 import { NotFoundError } from '@common/errors/api-errors'
 import { getBeKairosDBConnection } from '@infra/db/db'
-import { PartnerEntity, PartnerServiceEntity, ScheduleEntity } from '@infra/db/models/bekairos-models'
+import {
+  PartnerEntity,
+  PartnerMemberEntity,
+  PartnerServiceEntity,
+  ScheduleEntity
+} from '@infra/db/models/bekairos-models'
 import { BeKairosModels } from '@infra/db/schemas/bekairos-schema'
 import { PartnerResponse, PartnerServiceResponse } from '@features/partner/get-by-specialty/usecase'
 
@@ -36,6 +41,10 @@ export const getScheduleById = async (scheduleId: string): Promise<ScheduleRespo
 
   const partner = await dbConnection.getModelFor<PartnerEntity>(BeKairosModels.Partner).get({ id: service.partnerId })
 
+  const member = await dbConnection
+    .getModelFor<PartnerMemberEntity>(BeKairosModels.PartnerMember)
+    .get({ partnerServiceId: service.id }, { index: 'gs1', follow: true })
+
   const response: ScheduleResponse = {
     partner: {
       id: partner.id,
@@ -46,7 +55,11 @@ export const getScheduleById = async (scheduleId: string): Promise<ScheduleRespo
             id: service.id,
             name: service.name,
             price: service.price,
-            description: service.description
+            description: service.description,
+            professional: {
+              id: member.id,
+              name: member.name
+            }
           }
       )
     },

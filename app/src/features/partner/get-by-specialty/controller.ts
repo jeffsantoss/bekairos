@@ -7,7 +7,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   try {
     // await authorizeResourceAccess(event)
 
-    const specialtyId = event.pathParameters.specialtyId
+    const specialtyId = event?.pathParameters?.id
+
+    console.log(event)
 
     return ok(
       await getBySpecialty(specialtyId, {

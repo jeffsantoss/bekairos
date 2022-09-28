@@ -21,7 +21,7 @@ export const beKairosSchema = {
       specialtyId: { type: String, required: true },
       coordinates: {
         type: Object,
-        schema: { latitude: { type: Number, required: true }, longitude: { type: String, required: true } },
+        schema: { lat: { type: Number, required: true }, long: { type: String, required: true } },
         required: false
       },
       address: {

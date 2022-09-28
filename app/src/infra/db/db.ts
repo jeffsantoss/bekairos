@@ -13,7 +13,6 @@ export default class DBClient {
   logger = (level: string, message: string, context: any) => {
     if (level == 'trace' || level == 'data') return
     console.log(`${new Date().toLocaleString()}: ${level}: ${message}`)
-    // console.log(JSON.stringify(context, null, 4) + '\n')
   }
 
   constructor(tableName: string, schema: OneSchema) {

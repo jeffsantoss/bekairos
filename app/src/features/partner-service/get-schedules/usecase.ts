@@ -85,7 +85,7 @@ export const getScheduleByPartnerService = async (
             description: service.description,
             professional: {
               id: member.id,
-              name: member.partnerId
+              name: member.name
             }
           }
       )
