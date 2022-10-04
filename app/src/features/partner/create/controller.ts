@@ -5,7 +5,6 @@ import { createPartner } from './usecase'
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    // await authorizeResourceAccess(event) somente master acessar
     const id = await createPartner(JSON.parse(event.body))
     return created({ id })
   } catch (e) {

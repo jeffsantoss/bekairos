@@ -1,18 +1,17 @@
 import { APIGatewayProxyEvent } from 'aws-lambda'
+import { JwtPayload } from 'jsonwebtoken'
 import { authorize, jwtTokenFromAuthorizationHeader, JWTTokenPayload } from './authorizer'
 
-let jwtTokenPayloadSingleton: JWTTokenPayload = {}
+let jwtTokenPayloadSingleton: JwtPayload = {}
 
-export const authorizeResourceAccess = async (
-  event: APIGatewayProxyEvent,
-  scopes?: string[]
-): Promise<JWTTokenPayload> => {
+export const authorizeResourceAccess = async (event: APIGatewayProxyEvent, scopes?: string[]): Promise<JwtPayload> => {
   const jwtTokenString = jwtTokenFromAuthorizationHeader(event)
 
   const jwtToken = await authorize(jwtTokenString)
+
   console.log(`Event: ${JSON.stringify(event)}`)
   console.log(`JWT: ${JSON.stringify(jwtToken)}`)
-  jwtTokenPayloadSingleton = JSON.parse(jwtToken.payload as string)
+  jwtTokenPayloadSingleton = jwtToken.payload as JwtPayload
 
   // if (scopes) checkScopes(scopes)
 

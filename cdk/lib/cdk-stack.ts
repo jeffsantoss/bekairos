@@ -17,7 +17,7 @@ export class CdkStack extends cdk.Stack {
     })
 
     const commonEnv = {
-      JWKS_URI: process.env.JWKS_URI ?? 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_BuHXz7g6z/.well-known/jwks.json'
+      JWKS_URI: process.env.JWKS_URI ?? 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_VlTHXoqz4/.well-known/jwks.json'
     }
 
 
