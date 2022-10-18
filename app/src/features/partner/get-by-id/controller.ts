@@ -5,8 +5,6 @@ import { getAllPartners } from '../get/usecase'
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    // await authorizeResourceAccess(event)
-
     return ok(
       await getAllPartners({
         lat: event.queryStringParameters?.latitude,

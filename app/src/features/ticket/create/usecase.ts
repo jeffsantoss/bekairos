@@ -15,13 +15,13 @@ export const createTicket = async (scheduleId: string): Promise<string> => {
 
   if (!schedule) throw new NotFoundError(scheduleId)
 
-  const userId = /* jwtTokenPayloadSingleton?.sub ?? */ v4()
+  const userId = jwtTokenPayloadSingleton.sub
 
   try {
     const ticket = await dbConnection.getModelFor<TicketEntity>(BeKairosModels.Ticket).create({
       scheduleId: schedule.id,
       userId,
-      id: v4()
+      id: jwtTokenPayloadSingleton.sub
     })
 
     console.log(`TIcket for user ${userId} was created successfully`)
