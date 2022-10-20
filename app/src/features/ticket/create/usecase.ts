@@ -1,5 +1,7 @@
 /* eslint-disable no-loops/no-loops */
+import { TicketStatus } from '@common/constants'
 import { ConflictError, NotFoundError } from '@common/errors/api-errors'
+import authDataSingleton from '@common/security/authorizer-resource-access'
 import jwtTokenPayloadSingleton from '@common/security/authorizer-resource-access'
 import { getBeKairosDBConnection } from '@infra/db/db'
 import { ScheduleEntity, TicketEntity } from '@infra/db/models/bekairos-models'
@@ -15,13 +17,15 @@ export const createTicket = async (scheduleId: string): Promise<string> => {
 
   if (!schedule) throw new NotFoundError(scheduleId)
 
-  const userId = jwtTokenPayloadSingleton.sub
+  console.log(JSON.stringify(authDataSingleton))
+
+  const userId = authDataSingleton?.jwtPayload.sub
 
   try {
     const ticket = await dbConnection.getModelFor<TicketEntity>(BeKairosModels.Ticket).create({
       scheduleId: schedule.id,
       userId,
-      id: jwtTokenPayloadSingleton.sub
+      id: v4()
     })
 
     console.log(`TIcket for user ${userId} was created successfully`)
@@ -31,5 +35,6 @@ export const createTicket = async (scheduleId: string): Promise<string> => {
     if (e.code == 'UniqueError') {
       throw new ConflictError(scheduleId)
     }
+    throw e
   }
 }

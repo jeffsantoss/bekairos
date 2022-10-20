@@ -2,7 +2,11 @@ import { APIGatewayProxyEvent } from 'aws-lambda'
 import { JwtPayload } from 'jsonwebtoken'
 import { authorize, jwtTokenFromAuthorizationHeader, JWTTokenPayload } from './authorizer'
 
-let jwtTokenPayloadSingleton: JwtPayload = {}
+export type AuthDataSingleton = {
+  jwtPayload?: JWTTokenPayload
+}
+
+const authDataSingleton: AuthDataSingleton = {}
 
 export const authorizeResourceAccess = async (event: APIGatewayProxyEvent, scopes?: string[]): Promise<JwtPayload> => {
   const jwtTokenString = jwtTokenFromAuthorizationHeader(event)
@@ -11,11 +15,11 @@ export const authorizeResourceAccess = async (event: APIGatewayProxyEvent, scope
 
   console.log(`Event: ${JSON.stringify(event)}`)
   console.log(`JWT: ${JSON.stringify(jwtToken)}`)
-  jwtTokenPayloadSingleton = jwtToken.payload as JwtPayload
+  authDataSingleton.jwtPayload = jwtToken.payload as JwtPayload
 
   // if (scopes) checkScopes(scopes)
 
-  return jwtTokenPayloadSingleton
+  return authDataSingleton
 }
 
 // const checkScopes = (jwtPayload: any, ...args: string[]) => {
@@ -33,4 +37,4 @@ export const authorizeResourceAccess = async (event: APIGatewayProxyEvent, scope
 //   }
 // }
 
-export default jwtTokenPayloadSingleton
+export default authDataSingleton

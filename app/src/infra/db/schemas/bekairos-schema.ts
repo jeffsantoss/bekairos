@@ -98,7 +98,7 @@ export const beKairosSchema = {
       id: { type: String, generate: 'uuid', validate: Matcher.uuid },
       userId: { type: String, required: true },
       scheduleId: { type: String, required: true },
-      status: { type: String, enum: Object.keys(TicketStatus), default: TicketStatus.SCHEDULED },
+      status: { type: String, enum: Object.values(TicketStatus), default: TicketStatus.SCHEDULED },
 
       gs1pk: { type: String, value: 'ticket:${userId}' },
       gs1sk: { type: String, value: 'ticket' }
